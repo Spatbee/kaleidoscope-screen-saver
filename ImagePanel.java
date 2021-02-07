@@ -13,14 +13,19 @@ import java.awt.image.AffineTransformOp;
 public class ImagePanel extends JPanel{
 
     private transient BufferedImage image;
+    private transient BufferedImage reversedImage;
 
     public ImagePanel() {
-       try {                
-          image = ImageIO.read(new File("color.png"));
-       } catch (IOException ex) {
+        try {
+            image = ImageIO.read(new File("color.png"));
+            AffineTransform reverseTransformation = AffineTransform.getTranslateInstance(image.getWidth(), 0);
+            reverseTransformation.concatenate(AffineTransform.getScaleInstance(-1,1));
+            AffineTransformOp reverseOp = new AffineTransformOp(reverseTransformation, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+            reversedImage = reverseOp.filter(image, null);
+        } catch (IOException ex) {
             // handle exception...
-       }
-       setVisible(true);
+        }
+        setVisible(true);
     }
 
     @Override
@@ -38,13 +43,22 @@ public class ImagePanel extends JPanel{
                 Dimensions.getDegreesPerWedge(), Arc2D.PIE
             );
             g.setClip(pie);
-            //Dimensions.getDegreesPerWedge() * wedge
             double rotationRequired = Math.toRadians(-Dimensions.getDegreesPerWedge() * wedge + 90 - Dimensions.getDegreesPerWedge() / 2);
+            BufferedImage imageToDraw;
+            double arcOriginX;
+            if(wedge % 2 == 0) {
+                imageToDraw = reversedImage;
+                arcOriginX = reversedImage.getWidth() - Dimensions.getCircleRadius() * .5;
+            } else {
+                imageToDraw = image;
+                arcOriginX = Dimensions.getCircleRadius() * .5;
+            }
+
+            AffineTransform transformation = AffineTransform.getTranslateInstance(Dimensions.getCenterX() - arcOriginX, 0);
+            transformation.concatenate(AffineTransform.getRotateInstance(rotationRequired, arcOriginX, Dimensions.getCenterY()));
+            AffineTransformOp op = new AffineTransformOp(transformation, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+            g.drawImage(op.filter(imageToDraw, null), 0, 0, null);
             
-            AffineTransform transformation = AffineTransform.getTranslateInstance(Dimensions.getCenterX() * .5, 0);
-            transformation.concatenate(AffineTransform.getRotateInstance(rotationRequired, Dimensions.getCenterX()/2, Dimensions.getCenterY()));
-            AffineTransformOp op = new AffineTransformOp(transformation, AffineTransformOp.TYPE_BILINEAR);
-            g.drawImage(op.filter(image, null), 0, 0, null);
         }
         System.out.println(System.currentTimeMillis() - startTime);
        
