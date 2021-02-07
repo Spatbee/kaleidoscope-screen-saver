@@ -2,8 +2,8 @@ public class Dimensions {
     
     private static int wedges = 10;
     private static double radius = 320;
-    private static double centerX = 320;
-    private static double centerY = 320;
+    private static int xOffset = 50;
+    private static int yOffset = 50;
 
     public static void setWedges(int newValue) {
         wedges = newValue;
@@ -21,11 +21,11 @@ public class Dimensions {
         return radius;
     }
 
-    public static double getCenterX() {
-        return centerX;
+    public static int getXOffset() {
+        return xOffset;
     }
 
-    public static double getCenterY() {
-        return centerY;
+    public static int getYOffset() {
+        return yOffset;
     }
 }

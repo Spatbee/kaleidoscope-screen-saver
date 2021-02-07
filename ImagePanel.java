@@ -35,8 +35,8 @@ public class ImagePanel extends JPanel{
         for(int wedge = 0; wedge < Dimensions.getNumberOfWedges(); wedge++) {
             
             Shape pie = new Arc2D.Double(
-                Dimensions.getCenterX() - Dimensions.getCircleRadius(), 
-                Dimensions.getCenterY() - Dimensions.getCircleRadius(), 
+                Dimensions.getXOffset(), 
+                Dimensions.getYOffset(), 
                 Dimensions.getCircleRadius() * 2, 
                 Dimensions.getCircleRadius() * 2, 
                 Dimensions.getDegreesPerWedge() * wedge, 
@@ -54,10 +54,10 @@ public class ImagePanel extends JPanel{
                 arcOriginX = Dimensions.getCircleRadius() * .5;
             }
 
-            AffineTransform transformation = AffineTransform.getTranslateInstance(Dimensions.getCenterX() - arcOriginX, 0);
-            transformation.concatenate(AffineTransform.getRotateInstance(rotationRequired, arcOriginX, Dimensions.getCenterY()));
+            AffineTransform transformation = AffineTransform.getTranslateInstance(Dimensions.getCircleRadius() - arcOriginX, 0);
+            transformation.concatenate(AffineTransform.getRotateInstance(rotationRequired, arcOriginX, imageToDraw.getHeight()));
             AffineTransformOp op = new AffineTransformOp(transformation, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-            g.drawImage(op.filter(imageToDraw, null), 0, 0, null);
+            g.drawImage(op.filter(imageToDraw, null), Dimensions.getXOffset(), Dimensions.getYOffset(), null);
             
         }
         System.out.println(System.currentTimeMillis() - startTime);
