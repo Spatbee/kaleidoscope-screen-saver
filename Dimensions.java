@@ -4,6 +4,8 @@ public class Dimensions {
     private static double radius = 320;
     private static int xOffset = 50;
     private static int yOffset = 50;
+    private static int framesPerSecond = 20;
+    private static int pixelsPerSecond = 20;
 
     public static void setWedges(int newValue) {
         wedges = newValue;
@@ -27,5 +29,17 @@ public class Dimensions {
 
     public static int getYOffset() {
         return yOffset;
+    }
+
+    public static int getFramesPerSecond() {
+        return framesPerSecond;
+    }
+
+    public static int getPixelsPerSecond() {
+        return pixelsPerSecond;
+    }
+
+    public static int getPixelsPerFrame() {
+        return pixelsPerSecond / framesPerSecond;
     }
 }
