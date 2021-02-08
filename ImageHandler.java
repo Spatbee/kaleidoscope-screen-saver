@@ -5,7 +5,7 @@ import java.io.File;
 
 public class ImageHandler {
     private BufferedImage image;
-    private int leftOfArcBase;
+    private int halfSliceWidth;
     private int offset;
 
     public ImageHandler() {
@@ -14,12 +14,12 @@ public class ImageHandler {
         } catch (IOException ex) {
             // handle exception...
         }
-        leftOfArcBase = (int)Math.ceil(Dimensions.getCircleRadius() * Math.sin(Math.toRadians(Dimensions.getDegreesPerWedge()/2)));
-        offset = leftOfArcBase;
+        halfSliceWidth = (int)Math.ceil(image.getHeight() * Math.sin(Math.toRadians(Dimensions.getDegreesPerWedge()/2)));
+        offset = halfSliceWidth;
     }
 
     public BufferedImage getImage() {
-        return image;
+        return image.getSubimage(offset - halfSliceWidth, 0, halfSliceWidth * 2, image.getHeight());
     }
 
     public int getOffset() {
@@ -28,5 +28,9 @@ public class ImageHandler {
 
     public void stepImageRight() {
         offset += Dimensions.getPixelsPerFrame();
+    }
+
+    public int getHalfSliceWidth() {
+        return halfSliceWidth;
     }
 }

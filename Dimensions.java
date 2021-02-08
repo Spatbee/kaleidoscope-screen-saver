@@ -1,10 +1,10 @@
 public class Dimensions {
     
     private static int wedges = 10;
-    private static double radius = 320;
+    private static double radius = 500; //320
     private static int xOffset = 50;
     private static int yOffset = 50;
-    private static int framesPerSecond = 20;
+    private static int framesPerSecond = 10;
     private static int pixelsPerSecond = 20;
 
     public static void setWedges(int newValue) {

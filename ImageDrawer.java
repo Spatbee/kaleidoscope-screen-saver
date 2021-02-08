@@ -38,11 +38,14 @@ public class ImageDrawer {
         int imageOffset = imageHandler.getOffset();
         System.out.println("offset: " + imageOffset);
         BufferedImage original = imageHandler.getImage();
+
         double scale = Dimensions.getCircleRadius() / original.getHeight();
         BufferedImage image = new AffineTransformOp(AffineTransform.getScaleInstance(scale, scale), AffineTransformOp.TYPE_NEAREST_NEIGHBOR).filter(original, null);
+        //graphics.drawImage(image, 0, 0, null);
         AffineTransform reverseTransformation = AffineTransform.getTranslateInstance(image.getWidth(), 0);
         reverseTransformation.concatenate(AffineTransform.getScaleInstance(-1,1));
         BufferedImage reversedImage = new AffineTransformOp(reverseTransformation, AffineTransformOp.TYPE_NEAREST_NEIGHBOR).filter(image, null);
+        //graphics.drawImage(reversedImage, 0, (int)Dimensions.getCircleRadius(), null);
         imageHandler.stepImageRight();
         long startTime = System.currentTimeMillis();
         for(int wedge = 0; wedge < Dimensions.getNumberOfWedges(); wedge++) {
@@ -58,14 +61,11 @@ public class ImageDrawer {
             graphics.setClip(pie);
             double rotationRequired = Math.toRadians(-Dimensions.getDegreesPerWedge() * wedge + 90 - Dimensions.getDegreesPerWedge() / 2);
             BufferedImage imageToDraw;
-            int arcOriginX;
+            double arcOriginX = imageHandler.getHalfSliceWidth() * scale;
             if(wedge % 2 == 0) {
                 imageToDraw = reversedImage;
-                arcOriginX = 
-                    reversedImage.getWidth() - imageOffset;
             } else {
                 imageToDraw = image;
-                arcOriginX = imageOffset;
             }
 
             AffineTransform transformation = AffineTransform.getTranslateInstance(Dimensions.getCircleRadius() - arcOriginX, 0);
